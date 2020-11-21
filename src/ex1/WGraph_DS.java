@@ -70,7 +70,9 @@ public class WGraph_DS implements weighted_graph {
 
     @Override
     public void connect(int node1, int node2, double w) {
-
+        if(node1==node2){
+            return;
+        }
        //check if the two node is in the graph:
         if(graph_members.containsKey(node1)==false || graph_members.containsKey(node2)==false){
             return;
@@ -82,38 +84,44 @@ public class WGraph_DS implements weighted_graph {
             HashMap<Integer,Edge> hashPointer1=graph_node_edges.get(node1);//pointer to the inner hashmap
             Edge edgePointer=hashPointer1.get(node2);
             edgePointer.setPriority(w);
+            return;
         }
 
         //create the new edge:
-        else{
-            edges++;
-            Edge ep=new Edge(node1,node2,w); //pointer to the new edge.
-            graph_edges.add(ep);
+        edges++;
+        addNodeNi(node1,node2);
 
-            if(graph_node_edges.containsKey(node1)){  //if the node 1 has edges:
-                HashMap<Integer,Edge> hashPointer1=graph_node_edges.get(node1);//pointer to the inner hashmap of node1
-                if(graph_node_edges.containsKey(node2)){//if node 2 has edges:
-                    HashMap<Integer,Edge> hashPointer2=graph_node_edges.get(node2);//pointer to the inner hashmap of node2
-                    hashPointer1.put(node2,ep);//add the edge.
-                    hashPointer2.put(node1,ep);//add the edge.
-                }
-
-                else{//if the node 1 has neighbors and node 2 doesn't have neighbors:
-                    hashPointer1.put(node2,ep);//add the edge.
-                    graph_node_edges.put(node2,new HashMap<Integer, Edge>());//add hassMap to the neighbors to node 2.
-                    HashMap<Integer,Edge> hashPointer2=graph_node_edges.get(node2);//pointer to the inner hashmap of node2
-                    hashPointer2.put(node1,ep);//add the edge.
-                }
-            }
-
-            else{//if the node 2 has neighbors and node 1 doesn't have neighbors:
-                HashMap<Integer,Edge> hashPointer2=graph_node_edges.get(node2);//pointer to the inner hashmap of node2
-                hashPointer2.put(node1,ep);//add the edge.
-                graph_node_edges.put(node1,new HashMap<Integer, Edge>());//add hassMap to the neighbors to node 1.
-                HashMap<Integer,Edge> hashPointer1=graph_node_edges.get(node1);//pointer to the inner hashmap of node1
-                hashPointer1.put(node2,ep);//add the edge.
-            }
+        Edge ep=new Edge(node1,node2,w); //pointer to the new node.
+        if(graph_node_edges.containsKey(node2) && graph_node_edges.containsKey(node2)){//the two nodes have neighbors:
+            HashMap<Integer,Edge> hashPointer1=graph_node_edges.get(node1);//pointer to the inner hashmap of node1
+            HashMap<Integer,Edge> hashPointer2=graph_node_edges.get(node2);//pointer to the inner hashmap of node1
+            hashPointer1.put(node2,ep);//add the edge.
+            hashPointer2.put(node1,ep);//add the edge.
+            return;
         }
+        if(graph_node_edges.containsKey(node1)){//the node2 nodes not have neighbors:
+            HashMap<Integer,Edge> hashPointer1=graph_node_edges.get(node1);
+            graph_node_edges.put(node2,new HashMap<>());
+            HashMap<Integer,Edge> hashPointer2=graph_node_edges.get(node2);//pointer to the inner hashmap of nod
+            hashPointer1.put(node2,ep);//add the edge.
+            hashPointer2.put(node1,ep);//add the edge.
+            return;
+        }
+        if(graph_node_edges.containsKey(node2)){//the node1 nodes not have neighbors:
+            graph_node_edges.put(node1,new HashMap<>());
+            HashMap<Integer,Edge> hashPointer1=graph_node_edges.get(node1);//pointer to the inner hashmap of node1
+            HashMap<Integer,Edge> hashPointer2=graph_node_edges.get(node2);
+            hashPointer1.put(node2,ep);//add the edge.
+            hashPointer2.put(node1,ep);//add the edge.
+            return;
+        }
+        graph_node_edges.put(node1,new HashMap<>());
+        HashMap<Integer,Edge> hashPointer1=graph_node_edges.get(node1);//pointer to the inner hashmap of node1
+        graph_node_edges.put(node2,new HashMap<>());
+        HashMap<Integer,Edge> hashPointer2=graph_node_edges.get(node2);//pointer to the inner hashmap of node1
+        hashPointer1.put(node2,ep);//add the edge.
+        hashPointer2.put(node1,ep);//add the edge.
+
     }
 
     @Override
@@ -134,6 +142,7 @@ public class WGraph_DS implements weighted_graph {
             node_info np=graph_members.get(key);//node pointer.
             int num_of_neighbors=0;
             if(graph_node_edges.containsKey(key)==false){//if the node has no neighbors.
+                graph_members.remove(key);
                 return np;
             }
 
@@ -214,6 +223,21 @@ public class WGraph_DS implements weighted_graph {
         }
 
         return c_g;
+    }
+
+    private void addNodeNi(int node1, int node2){
+        if(graph_members.containsKey(node1)==false || graph_members.containsKey(node2)==false){
+            return;
+        }
+        if(hasEdge(node1,node2)){
+            return;
+        }
+        WGNode n1=(WGNode) graph_members.get(node1);//node1 pointer.
+        WGNode n2=(WGNode) graph_members.get(node2);//node1 pointer.
+        ArrayList<node_info> n1Ni=(ArrayList<node_info>)(node_neighbors.get(node1));
+        ArrayList<node_info> n2Ni=(ArrayList<node_info>)(node_neighbors.get(node2));
+        n1Ni.add(n2);
+        n2Ni.add(n1);
     }
 
 
