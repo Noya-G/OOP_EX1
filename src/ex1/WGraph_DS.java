@@ -167,7 +167,7 @@ public class WGraph_DS implements weighted_graph {
 
     @Override
     public void removeEdge(int node1, int node2) {
-        if(graph_members.containsKey(node1) || graph_members.containsKey(node2)){//if one of the node is not exist:
+        if(graph_members.containsKey(node1)==false || graph_members.containsKey(node2)==false){//if one of the node is not exist:
             return;
         }
         mc++;
