@@ -92,6 +92,7 @@ public class WGraph_DS implements weighted_graph {
         addNodeNi(node1,node2);
 
         Edge ep=new Edge(node1,node2,w); //pointer to the new node.
+        graph_edges.add(ep);
         if(graph_node_edges.containsKey(node2) && graph_node_edges.containsKey(node2)){//the two nodes have neighbors:
             HashMap<Integer,Edge> hashPointer1=graph_node_edges.get(node1);//pointer to the inner hashmap of node1
             HashMap<Integer,Edge> hashPointer2=graph_node_edges.get(node2);//pointer to the inner hashmap of node1
@@ -146,20 +147,20 @@ public class WGraph_DS implements weighted_graph {
                 return np;
             }
 
-            Collection<Edge> hashPointer= graph_node_edges.get(key).values();//pointer to the inner hash.
-            for (Edge e: hashPointer) {
+            ArrayList<node_info> nNi=node_neighbors.get(key);
+            for (int i=0; i<nNi.size();i++){
                 int k_d;//the key of the node that connect to the node we want delete.
+                int k=nNi.get(i).getKey();
+                Edge e=graph_node_edges.get(key).get(k);
                 if (e.getNodesKeys()[0] == key) {// if the first key of the edge is the key:
                     k_d = e.getNodesKeys()[1];
                 } else {
                     k_d = e.getNodesKeys()[0];
                 }
-                Edge ep=graph_node_edges.get(k_d).get(key);//edge pointer.
-                if(graph_edges.contains(ep)) graph_edges.remove(ep);
-                graph_node_edges.get(k_d).remove(key);
-                node_neighbors.get(k_d).remove(key);
+                removeEdge(key,k_d);
+                i--;
             }
-            node_neighbors.remove(key);
+            graph_members.remove(key);
             return np;
         }
         return null;
@@ -189,7 +190,7 @@ public class WGraph_DS implements weighted_graph {
 
     @Override
     public int edgeSize() {
-        return edges;
+        return graph_edges.size();
     }
 
     @Override
@@ -238,6 +239,17 @@ public class WGraph_DS implements weighted_graph {
         ArrayList<node_info> n2Ni=(ArrayList<node_info>)(node_neighbors.get(node2));
         n1Ni.add(n2);
         n2Ni.add(n1);
+    }
+
+
+    public void graphEdgesToString(){
+        System.out.println("------------graph_edges:-------------");
+        for (int i=0; i<graph_edges.size(); i++){
+            System.out.println("edge number:"+i);
+            System.out.println("priority:"+graph_edges.get(i).getPriority());
+            System.out.println("connect the nodes:"+graph_edges.get(i).getNodesKeys()[0]+", "+graph_edges.get(i).getNodesKeys()[1]);
+            System.out.println();
+        }
     }
 
 
