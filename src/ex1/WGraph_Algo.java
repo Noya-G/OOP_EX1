@@ -1,6 +1,7 @@
 package ex1;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class WGraph_Algo implements weighted_graph_algorithms {
@@ -22,25 +23,18 @@ public class WGraph_Algo implements weighted_graph_algorithms {
 
     @Override
     public weighted_graph copy() {
-        weighted_graph g_c=new WGraph_DS();//graph deep copy.
-
-        //get all graph nodes:
-        ArrayList<node_info> nodes_graph= (ArrayList<node_info>)graph.getV();
-        int graph_size= graph.nodeSize();
-
-        //deep copy of graph nodes:
-        for(int i=0; i<graph_size; i++){
-            //node
-        }
-
-        //copy all the graph edges:
-        int edgesize =graph.edgeSize();
+        WGraph_DS g_c=((WGraph_DS)graph).getCopy();//graph deep copy.
         return g_c;
     }
 
     @Override
     public boolean isConnected() {
-        return false;
+        if(graph.nodeSize()==0){
+            return true;
+        }
+        WGraph_DS g=((WGraph_DS)graph).getCopy();
+        WGNode np=(WGNode)(g.getV().toArray()[0]);  //node pointer.
+        return DijkstraAlgoConnected(np,g);
     }
 
     @Override
@@ -62,4 +56,46 @@ public class WGraph_Algo implements weighted_graph_algorithms {
     public boolean load(String file) {
         return false;
     }
+
+    //////////////////////////////////////////////////////////////////////
+    /////////////////////////private methods:////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+
+    private boolean DijkstraAlgoConnected(WGNode src,WGraph_DS g){
+        if(g.nodeSize()==0 || g.nodeSize()==1){
+            return true;
+        }
+        ArrayList<WGNode> c_n=new ArrayList<>();//contain all that connected to the src.
+        ArrayList<WGNode> aidQueue=new ArrayList<>();//aid Queue.
+        WGNode nodePointer=null;
+
+        aidQueue.add(src);
+        src.setTag(1);
+        nodePointer=aidQueue.get(0);
+        int pointer=0;
+        while (aidQueue.size()>0){
+            WGNode np=(WGNode)(aidQueue.get(pointer));//node pointer.
+            ArrayList<node_info> nNi= (ArrayList<node_info>)g.getV(np.getKey());
+            for(int j=0; j<nNi.size(); j++){
+                WGNode pNi= (WGNode)nNi.get(j);
+                if(pNi.getTag()==Double.MAX_VALUE){
+                    pNi.setTag(1);
+                    aidQueue.add(pNi);
+                }
+            }
+            pointer++;
+            np.setTag(2);// mark the node as one that the algo visited all it neighbors.
+            if(c_n.size()==g.nodeSize()){ //if mey all the nodes.
+                return true;
+            }
+        }
+
+        if(c_n.size()<g.nodeSize()){
+            return false;
+        }
+        return true;
+    }
+
+
+
 }
