@@ -2,9 +2,9 @@ package ex1;
 
 public class WGNode implements node_info{
 
-    int key;
-    String info;
-    double tag;
+    private int key;
+    private String info;
+    private double tag;
 
     public WGNode(int key){
         this.key=key;

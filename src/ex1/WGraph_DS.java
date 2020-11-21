@@ -5,11 +5,11 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public class WGraph_DS implements weighted_graph {
-    HashMap<Integer,node_info> graph_members;//node key,node.
-    HashMap<Integer,HashMap<Integer,Edge>> graph_node_edges;//node key, each node edges.
-    HashMap<Integer,ArrayList<node_info>> node_neighbors;
-    ArrayList<Edge> graph_edges;
-    int mc,edges;
+    private HashMap<Integer,node_info> graph_members;//node key,node.
+    private HashMap<Integer,HashMap<Integer,Edge>> graph_node_edges;//node key, each node edges.
+    private HashMap<Integer,ArrayList<node_info>> node_neighbors;
+    private ArrayList<Edge> graph_edges;
+    private int mc,edges;
 
     public WGraph_DS(){//constructor.
         this.mc=0;
