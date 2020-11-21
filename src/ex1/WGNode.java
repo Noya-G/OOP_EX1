@@ -6,6 +6,12 @@ public class WGNode implements node_info{
     String info;
     double tag;
 
+    public WGNode(int key){
+        this.key=key;
+        this.info="";
+        this.tag=Double.MAX_VALUE;
+    }
+
     @Override
     public int getKey() {
         return key;
