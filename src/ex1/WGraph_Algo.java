@@ -32,6 +32,10 @@ public class WGraph_Algo implements weighted_graph_algorithms {
         if(graph.nodeSize()==0){
             return true;
         }
+        int n_fullGraph=((graph.nodeSize())*(graph.nodeSize()-1))/2;//check if the graph is full
+        if(n_fullGraph==graph.edgeSize()){
+            return true;
+        }
         WGraph_DS g=((WGraph_DS)graph).getCopy();
         WGNode np=(WGNode)(g.getV().toArray()[0]);  //node pointer.
         return DijkstraAlgoConnected(np,g);
@@ -73,7 +77,7 @@ public class WGraph_Algo implements weighted_graph_algorithms {
         src.setTag(1);
         nodePointer=aidQueue.get(0);
         int pointer=0;
-        while (aidQueue.size()>0){
+        while (pointer<aidQueue.size()){
             WGNode np=(WGNode)(aidQueue.get(pointer));//node pointer.
             ArrayList<node_info> nNi= (ArrayList<node_info>)g.getV(np.getKey());
             for(int j=0; j<nNi.size(); j++){
@@ -85,7 +89,7 @@ public class WGraph_Algo implements weighted_graph_algorithms {
             }
             pointer++;
             np.setTag(2);// mark the node as one that the algo visited all it neighbors.
-            if(c_n.size()==g.nodeSize()){ //if mey all the nodes.
+            if(aidQueue.size()==g.nodeSize()){ //if mey all the nodes.
                 return true;
             }
         }
