@@ -1,11 +1,11 @@
 package ex1;
 
-import java.lang.reflect.Array;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class WGraph_Algo implements weighted_graph_algorithms {
+public class WGraph_Algo implements weighted_graph_algorithms, java.io.Serializable {
     weighted_graph graph;
 
     public WGraph_Algo(){
@@ -59,11 +59,37 @@ public class WGraph_Algo implements weighted_graph_algorithms {
 
     @Override
     public boolean save(String file) {
+        try {
+            FileOutputStream f = new FileOutputStream(file);
+            ObjectOutputStream out = new ObjectOutputStream(f);
+            out.writeObject(graph);
+            graph=(weighted_graph)f;
+            out.close();
+            f.close();
+            return true;
+        }
+        catch(IOException ex)
+        {
+            System.out.println("IOException is caught");
+        }
         return false;
     }
 
     @Override
     public boolean load(String file) {
+        try {
+            FileInputStream f = new FileInputStream(file);
+            ObjectInputStream in = new ObjectInputStream(f);
+            Object g=null;
+            g=in.readObject();
+            in.close();
+            f.close();
+            return true;
+        }
+        catch(IOException | ClassNotFoundException ex)
+        {
+            System.out.println("IOException is caught");
+        }
         return false;
     }
 
