@@ -49,7 +49,8 @@ public class WGraph_Algo implements weighted_graph_algorithms {
 
     @Override
     public List<node_info> shortestPath(int src, int dest) {
-        return null;
+        WGraph_DS g=((WGraph_DS)graph).getCopy();
+        return shortestPathDijkstraAlgo((WGNode) g.getNode(src),(WGNode) g.getNode(dest),g);
     }
 
     @Override
@@ -157,6 +158,83 @@ public class WGraph_Algo implements weighted_graph_algorithms {
         return -1;
     }
 
+    private List<node_info> shortestPathDijkstraAlgo(WGNode src, WGNode dest, WGraph_DS g){
+        ArrayList<node_info> ans=new ArrayList<node_info>(); //answer.
+
+        if(g.nodeSize()==2 && g.edgeSize()==1){
+            ans.add(src);
+            ans.add(dest);
+            return ans;
+        }
+
+        ArrayList<WGNode> stack=new ArrayList<WGNode>();
+        stack.add(src);
+        src.setTag(1);
+        int pointer=0;
+
+        HashMap<Integer,Double> nodeShortPath=new HashMap<>();
+        nodeShortPath.put(src.getKey(),0.0);
+
+
+        while (pointer<stack.size()){
+
+            WGNode np=stack.get(pointer); //node pointer.
+            int key= np.getKey();//node key.
+            ArrayList<node_info> nNi= (ArrayList<node_info>)g.getV(np.getKey());//node neighbors.
+            int numNi=nNi.size();//number of neighbors.
+            double priority=nodeShortPath.get(key);//the priority fo the last node
+
+            for(int i=0; i<numNi; i++){
+                WGNode pNi= (WGNode)nNi.get(i);//pointer to the node.
+                int neighborKey=pNi.getKey();
+                Double n1n2p=g.getEdge(key,neighborKey);
+                WGNode nPointer= (WGNode)nNi.get(i);
+                if(nPointer.getTag()==2){
+                    if(n1n2p+priority<nodeShortPath.get(neighborKey)){
+                        nodeShortPath.remove(neighborKey);
+                        nodeShortPath.put(neighborKey,n1n2p+priority);
+                    }
+                }
+                if(nPointer.getTag()!=2){
+                    if (nPointer.getTag()==1){//if the algo met the node but all its neighbors:
+                        if((n1n2p+priority)<nodeShortPath.get(neighborKey)){
+                            nodeShortPath.remove(neighborKey);
+                            nodeShortPath.put(neighborKey,n1n2p+priority);
+                        }
+                    }
+                    if(nPointer.getTag()==Double.MAX_VALUE){//if the algo never met the node:
+                        nodeShortPath.put(neighborKey,n1n2p+priority);
+                        stack.add(pNi);
+                        pNi.setTag(1);
+                    }
+                }
+            }
+            np.setTag(2);
+            pointer++;
+        }
+        if(nodeShortPath.containsKey(dest.getKey())==false){
+            return null;
+        }
+
+        //find the shorter path:
+        while (ans.contains(src.getKey())==false){
+            WGNode nLest= (WGNode) ans.get(ans.size()-1);
+            double nPriority=nodeShortPath.get(nLest.getKey());
+            ArrayList<node_info> nNi= (ArrayList<node_info>)g.getV(nLest.getKey());//node neighbors.
+            for(int i=0; i<nNi.size(); i++){
+                double ePriority=g.getEdge(nNi.get(i).getKey(),nLest.getKey());
+                if((nPriority-ePriority)==nodeShortPath.get(nNi.get(i))){
+                    ans.add(nNi.get(i));
+                }
+            }
+        }
+        ArrayList<node_info> finalAns=new ArrayList<>();
+        for (int i=0; i<ans.size(); i++){
+            finalAns.add(ans.get(ans.size()-1-i));
+        }
+
+        return finalAns;
+    }
 
 
 }
