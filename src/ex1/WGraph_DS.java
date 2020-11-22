@@ -3,6 +3,7 @@ package ex1;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.io.Serializable;
 
 public class WGraph_DS implements weighted_graph {
     private HashMap<Integer,node_info> graph_members;//node key,node.
@@ -242,7 +243,7 @@ public class WGraph_DS implements weighted_graph {
     }
 
 
-    public void graphEdgesToString(){
+    public void graphEdgesToString(){//for DEBUG
         System.out.println("------------graph_edges:-------------");
         for (int i=0; i<graph_edges.size(); i++){
             System.out.println("edge number:"+i);
@@ -251,6 +252,18 @@ public class WGraph_DS implements weighted_graph {
             System.out.println();
         }
     }
+
+    public void graphMembersToString(){//for DEBUG
+        System.out.println("------------graph_members:-------------");
+        for (int i=0; i<nodeSize(); i++){
+            System.out.println("node:"+graph_members.get(i).getKey()+", its neighbors:");
+            for (int j=0; j<getV(graph_members.get(i).getKey()).size(); j++){
+                System.out.print(((ArrayList<node_info>)getV(graph_members.get(i).getKey())).get(j).getKey()+", ");
+            }
+            System.out.println();
+        }
+    }
+
 
 
     /////////////////////////////////////////////////////////////////////////
