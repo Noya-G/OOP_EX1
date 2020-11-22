@@ -1,5 +1,5 @@
 # OOP_EX1
-this code made as assignment at object oriented programming.
+this code made as assignment at object oriented programming class.
 
 by running this code you can create weighted graph(to read more about weighted graph: https://en.wikipedia.org/wiki/Graph_(discrete_mathematics))
 
