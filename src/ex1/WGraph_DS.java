@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.io.Serializable;
+import java.util.Objects;
 
 
 public class WGraph_DS implements weighted_graph,java.io.Serializable {
@@ -265,9 +266,20 @@ public class WGraph_DS implements weighted_graph,java.io.Serializable {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WGraph_DS wGraph_ds = (WGraph_DS) o;
+        return mc == wGraph_ds.mc &&
+                edges == wGraph_ds.edges &&
+                graph_edges.equals(wGraph_ds.graph_edges);
+    }
 
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(graph_edges, mc, edges);
+    }
 
     /////////////////////////////////////////////////////////////////////////
     /////////////////////////Private object class///////////////////////////
@@ -305,7 +317,20 @@ public class WGraph_DS implements weighted_graph,java.io.Serializable {
             return arrKeys;
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Edge edge = (Edge) o;
+            return Double.compare(edge.priority, priority) == 0 &&
+                    k1 == edge.k1 &&
+                    k2 == edge.k2;
+        }
 
+        @Override
+        public int hashCode() {
+            return Objects.hash(priority, k1, k2);
+        }
     }
 
 }
