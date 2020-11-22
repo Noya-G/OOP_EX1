@@ -43,7 +43,8 @@ public class WGraph_Algo implements weighted_graph_algorithms {
 
     @Override
     public double shortestPathDist(int src, int dest) {
-        return 0;
+        WGraph_DS g=((WGraph_DS)graph).getCopy();
+        return shortestPathDistDijkstraAlgoConnected((WGNode) g.getNode(src),(WGNode) g.getNode(dest),g);
     }
 
     @Override
@@ -98,6 +99,62 @@ public class WGraph_Algo implements weighted_graph_algorithms {
             return false;
         }
         return true;
+    }
+
+    private double shortestPathDistDijkstraAlgoConnected(WGNode src, WGNode dest, WGraph_DS g){
+        if(g.nodeSize()==2 && g.edgeSize()==1){
+            return g.getEdge(src.getKey(),dest.getKey());
+        }
+
+        ArrayList<WGNode> stack=new ArrayList<WGNode>();
+        stack.add(src);
+        src.setTag(1);
+        int pointer=0;
+
+        HashMap<Integer,Double> nodeShortPath=new HashMap<>();
+        nodeShortPath.put(src.getKey(),0.0);
+
+
+        while (pointer<stack.size()){
+
+            WGNode np=stack.get(pointer); //node pointer.
+            int key= np.getKey();//node key.
+            ArrayList<node_info> nNi= (ArrayList<node_info>)g.getV(np.getKey());//node neighbors.
+            int numNi=nNi.size();//number of neighbors.
+            double priority=nodeShortPath.get(key);//the priority fo the last node
+
+            for(int i=0; i<numNi; i++){
+                WGNode pNi= (WGNode)nNi.get(i);//pointer to the node.
+                int neighborKey=pNi.getKey();
+                Double n1n2p=g.getEdge(key,neighborKey);
+                WGNode nPointer= (WGNode)nNi.get(i);
+                if(nPointer.getTag()==2){
+                    if(n1n2p+priority<nodeShortPath.get(neighborKey)){
+                        nodeShortPath.remove(neighborKey);
+                        nodeShortPath.put(neighborKey,n1n2p+priority);
+                    }
+                }
+               if(nPointer.getTag()!=2){
+                   if (nPointer.getTag()==1){//if the algo met the node but all its neighbors:
+                       if((n1n2p+priority)<nodeShortPath.get(neighborKey)){
+                           nodeShortPath.remove(neighborKey);
+                           nodeShortPath.put(neighborKey,n1n2p+priority);
+                       }
+                   }
+                   if(nPointer.getTag()==Double.MAX_VALUE){//if the algo never met the node:
+                       nodeShortPath.put(neighborKey,n1n2p+priority);
+                       stack.add(pNi);
+                       pNi.setTag(1);
+                   }
+               }
+            }
+            np.setTag(2);
+            pointer++;
+        }
+        if(nodeShortPath.containsKey(dest.getKey())){
+            return nodeShortPath.get(dest.getKey());
+        }
+        return -1;
     }
 
 
