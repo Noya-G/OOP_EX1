@@ -1,5 +1,6 @@
 package ex1;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -176,6 +177,7 @@ public class WGraph_Algo implements weighted_graph_algorithms {
         nodeShortPath.put(src.getKey(),0.0);
 
 
+
         while (pointer<stack.size()){
 
             WGNode np=stack.get(pointer); //node pointer.
@@ -216,21 +218,51 @@ public class WGraph_Algo implements weighted_graph_algorithms {
             return null;
         }
 
+        System.out.println("---------nodes priority:---------");//DEBUG
+        for(int i=0; i<g.nodeSize();i++){
+           if(nodeShortPath.containsKey(i)){
+               double d=nodeShortPath.get(i);
+               System.out.print("node: "+i+", priority: "+d);
+           }
+        }
+
+        ans.add(dest);
         //find the shorter path:
+        int i=0;
+        boolean t=false;
+        int kkkkkk= src.getKey();
         while (ans.contains(src.getKey())==false){
-            WGNode nLest= (WGNode) ans.get(ans.size()-1);
-            double nPriority=nodeShortPath.get(nLest.getKey());
-            ArrayList<node_info> nNi= (ArrayList<node_info>)g.getV(nLest.getKey());//node neighbors.
-            for(int i=0; i<nNi.size(); i++){
-                double ePriority=g.getEdge(nNi.get(i).getKey(),nLest.getKey());
-                if((nPriority-ePriority)==nodeShortPath.get(nNi.get(i))){
-                    ans.add(nNi.get(i));
+            double nPriority=nodeShortPath.get(ans.get(i).getKey());
+            int nk1=ans.get(i).getKey();
+            boolean rem1=false;
+            ArrayList<node_info> nNi= (ArrayList<node_info>)g.getV(ans.get(i).getKey());//node neighbors.
+            for (int j=0; j<nNi.size(); j++){
+                int k1=ans.get(i).getKey();
+                int k2=nNi.get(j).getKey();
+                if(t==false){
+                    double ePriority=g.getEdge(k1,k2);//edge priority:
+                    double a1=nPriority;//k2 priority:
+                    double a2=nodeShortPath.get(k2);//k1 priority:
+                    if((a2+ePriority)==a1){
+                        int www=i;
+                        ans.add(g.getNode(k2));
+                        if(k2==kkkkkk){
+                           rem1=true;
+                        }
+                        t=true;
+                    }
                 }
             }
+            if(rem1==true){
+                break;
+            }
+            t=false;
+            i++;
         }
         ArrayList<node_info> finalAns=new ArrayList<>();
-        for (int i=0; i<ans.size(); i++){
-            finalAns.add(ans.get(ans.size()-1-i));
+        int aaaa=ans.size();
+        for (int m=ans.size(); -1>m; m--){
+            finalAns.add(ans.get(m));
         }
 
         return finalAns;
