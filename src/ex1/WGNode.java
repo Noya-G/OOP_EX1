@@ -1,6 +1,9 @@
 package ex1;
 
-public class WGNode implements node_info{
+
+import java.util.Objects;
+
+public class WGNode implements node_info, java.io.Serializable {
 
     private int key;
     private String info;
@@ -11,6 +14,7 @@ public class WGNode implements node_info{
         this.info="";
         this.tag=Double.MAX_VALUE;
     }
+
 
     @Override
     public int getKey() {
@@ -35,5 +39,19 @@ public class WGNode implements node_info{
     @Override
     public void setTag(double t) {
     tag=t;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WGNode wgNode = (WGNode) o;
+        return key == wgNode.key &&
+                info.equals(wgNode.info);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(key, info);
     }
 }
