@@ -5,7 +5,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.io.Serializable;
 
-public class WGraph_DS implements weighted_graph {
+
+public class WGraph_DS implements weighted_graph,java.io.Serializable {
     private HashMap<Integer,node_info> graph_members;//node key,node.
     private HashMap<Integer,HashMap<Integer,Edge>> graph_node_edges;//node key, each node edges.
     private HashMap<Integer,ArrayList<node_info>> node_neighbors;
@@ -263,6 +264,8 @@ public class WGraph_DS implements weighted_graph {
             System.out.println();
         }
     }
+
+
 
 
 
