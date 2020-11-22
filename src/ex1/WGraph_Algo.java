@@ -33,6 +33,9 @@ public class WGraph_Algo implements weighted_graph_algorithms {
         if(graph.nodeSize()==0){
             return true;
         }
+        if(graph.edgeSize()<(graph.nodeSize()-1)){
+            return false;
+        }
         int n_fullGraph=((graph.nodeSize())*(graph.nodeSize()-1))/2;//check if the graph is full
         if(n_fullGraph==graph.edgeSize()){
             return true;
@@ -218,13 +221,13 @@ public class WGraph_Algo implements weighted_graph_algorithms {
             return null;
         }
 
-        System.out.println("---------nodes priority:---------");//DEBUG
-        for(int i=0; i<g.nodeSize();i++){
-           if(nodeShortPath.containsKey(i)){
-               double d=nodeShortPath.get(i);
-               System.out.print("node: "+i+", priority: "+d);
-           }
-        }
+//        System.out.println("---------nodes priority:---------");//DEBUG
+//        for(int i=0; i<g.nodeSize();i++){
+//           if(nodeShortPath.containsKey(i)){
+//               double d=nodeShortPath.get(i);
+//               System.out.print("node: "+i+", priority: "+d);
+//           }
+//        }
 
         ans.add(dest);
         //find the shorter path:
